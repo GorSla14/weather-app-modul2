@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    const popover = new bootstrap.Popover(document.getElementById("city-input"), {
+        trigger: "manual"
+    });
     let savedHistory = JSON.parse(localStorage.getItem("weatherHistory")) || [];
 
     savedHistory.forEach(function (city) {
@@ -14,6 +17,8 @@ $(document).ready(function () {
             url: url,
             method: "GET",
             success: function (data) {
+                popover.hide();
+                
                 const cityName = data.name;
                 const temperature = data.main.temp;
                 const windSpeed = data.wind.speed;
@@ -40,7 +45,7 @@ $(document).ready(function () {
             },
             error: function () {
                 $("#weather-result").empty();
-                alert("City not found. Please try again.");
+                popover.show();
             }
         });
     });
