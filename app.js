@@ -4,11 +4,19 @@ $(document).ready(function () {
     });
     let savedHistory = JSON.parse(localStorage.getItem("weatherHistory")) || [];
 
-    savedHistory.forEach(function (city) {
-        $("#history-list").append(`<li>${city}</li>`);
+    savedHistory.forEach(function (item) {
+        $("#history-list").append(`
+            <li>
+                <img src="https://openweathermap.org/img/wn/${item.icon}@2x.png" alt="Weather icon">
+                <strong>${item.name}</strong>
+                <span>${item.temperature} °C</span>
+                <span>${item.windSpeed} m/s</span>
+            </li>
+        `);
     });
 
-    $("#search-btn").on("click", function () {
+        $("#search-form").on("submit", function (event) {
+            event.preventDefault();
         let city = $("#city-input").val();
 
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${apiKey}&units=metric&lang=sv`;
@@ -18,7 +26,7 @@ $(document).ready(function () {
             method: "GET",
             success: function (data) {
                 popover.hide();
-                
+
                 const cityName = data.name;
                 const temperature = data.main.temp;
                 const windSpeed = data.wind.speed;
@@ -31,16 +39,28 @@ $(document).ready(function () {
                     <p>Wind speed: ${windSpeed} m/s</p>
                 `);
                 let history = JSON.parse(localStorage.getItem("weatherHistory")) || [];
-                history = history.filter(item => item !== cityName);
-                history.unshift(cityName);
+                history = history.filter(item => item.name !== cityName);
+                history.unshift({
+                    name: cityName,
+                    temperature: temperature,
+                    windSpeed: windSpeed,
+                    icon: icon
+                });
                 history = history.slice(0, 5);
 
                 localStorage.setItem("weatherHistory", JSON.stringify(history));
 
                 $("#history-list").empty();
 
-                history.forEach(function (city) {
-                    $("#history-list").append(`<li>${city}</li>`);
+                history.forEach(function (item) {
+                    $("#history-list").append(`
+                        <li>
+                            <img src="https://openweathermap.org/img/wn/${item.icon}@2x.png" alt="Weather icon">
+                            <strong>${item.name}</strong>
+                            <span>${item.temperature} °C</span>
+                            <span>${item.windSpeed} m/s</span>
+                        </li>
+                    `);
                 });
             },
             error: function () {
@@ -50,9 +70,8 @@ $(document).ready(function () {
         });
     });
     
-    $("#search-form").on("submit", function (event) {
-    event.preventDefault();
-        navigator.geolocation.getCurrentPosition(
+        $("#location-btn").on("click", function () {
+            navigator.geolocation.getCurrentPosition(
             function (position) {
                 const latitude = position.coords.latitude;
                 const longitude = position.coords.longitude;
@@ -74,15 +93,27 @@ $(document).ready(function () {
                             <p>Wind speed: ${windSpeed} m/s</p>
                         `);
                         let history = JSON.parse(localStorage.getItem("weatherHistory")) || [];
-                        history = history.filter(item => item !== cityName);
-                        history.unshift(cityName);
+                        history = history.filter(item => item.name !== cityName);
+                        history.unshift({
+                            name: cityName,
+                            temperature: temperature,
+                            windSpeed: windSpeed,
+                            icon: icon
+                        });
                         history = history.slice(0, 5);
 
                         localStorage.setItem("weatherHistory", JSON.stringify(history));
 
                         $("#history-list").empty();
-                        history.forEach(function (city) {
-                            $("#history-list").append(`<li>${city}</li>`);
+                        history.forEach(function (item) {
+                            $("#history-list").append(`
+                                <li>
+                                    <img src="https://openweathermap.org/img/wn/${item.icon}@2x.png" alt="Weather icon">
+                                    <strong>${item.name}</strong>
+                                    <span>${item.temperature} °C</span>
+                                    <span>${item.windSpeed} m/s</span>
+                                </li>
+                            `);
                         });
                     },
                     error: function () {

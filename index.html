@@ -10,21 +10,25 @@
 <body id="weather-app-da395b">
     <main>
         <h1>Weather App</h1>
+            <p>We'll fetch the weather for you! Where do you want to know the weather?</p>
 
-        <form id="search-form">
-            <input type="text" id="city-input"
-                data-bs-toggle="popover"
-                data-bs-content="City not found. Please try again."
-                data-bs-placement="bottom">
-            <button type="submit" id="search-btn">Search</button>
-        </form>
+        <div class="search-controls">
+            <button id="location-btn">Use my location</button>
 
-        <button id="location-btn">Use my location</button>
+            <form id="search-form">
+                <input type="text" id="city-input"
+                    data-bs-toggle="popover"
+                    data-bs-content="City not found. Please try again."
+                    data-bs-placement="bottom">
+                <button type="submit" id="search-btn">Search</button>
+            </form>
+        </div>
 
         <section id="weather-result"></section>
 
         <section id="search-history">
-            <h2>Recent searches</h2>
+            <h2>Latest requests</h2>
+            <p>Here you can see the weather for your latest searches.</p>
             <ul id="history-list"></ul>
         </section>
     </main>
